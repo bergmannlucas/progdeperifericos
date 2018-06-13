@@ -188,8 +188,6 @@ void escrever_padrao() {
 		return;
 	}
 
-	//printf("PADRAO ATUAL = %c\n", padrao_atual);
-
 	write(fd, &padrao_atual, 1);
 }
 
@@ -204,8 +202,6 @@ void escrever_padrao_comparametro(char padrao) {
 		return;
 	}
 
-	//printf("PADRAO ATUAL = %c\n", padrao);
-
 	write(fd, &padrao, 1);
 }
 
@@ -219,7 +215,6 @@ void proximo_padrao() {
 	}
 
 	printf("PADRAO ATUAL = %c\n", padrao_atual);
-	//printf("Aperte S3 para confirmar!\n");
 }
 
 void padrao_anterior() {
@@ -232,7 +227,6 @@ void padrao_anterior() {
 	}
 
 	printf("PADRAO ATUAL = %c\n", padrao_atual);
-	//printf("Aperte S3 para confirmar!\n");
 }
 
 void escreve_padrao_comnumero(int padrao){
@@ -287,7 +281,6 @@ void ler_mudancas_de_cada_padrao() {
 
 	if(fd < 0) {
 		printf("ERRO AO TENTAR LER DO SERIAL!!!\n");
-
 		return;
 	}
 
@@ -376,7 +369,6 @@ void printa_vezes_padroes() {
 	int i;
 	char padrao_atual2 = 'A';
 	for(i=0; i < qtdPadroes; i++) {
-		//vezes_padroes[i] = 0;
 		printf("Padrão %c: %d\n", padrao_atual2, vezes_padroes[i]);		
 		padrao_atual2++;
 	}
@@ -386,17 +378,16 @@ void inicializa_array_vezes_padroes() {
 	int i;
 	for(i=0; i < qtdPadroes; i++) {
 		vezes_padroes[i] = 0;
-		//printf("Posição %d do array: %d\n", i, vezes_padroes[i]);
 	}
 }
 
 int main(int argc, char *argv[]) 
 {
-	//S3
+	//S1
 	int pushbutton25 = 25;
 	//S2
 	int pushbutton24 = 24;
-	//S1
+	//S3
 	int pushbutton23 = 23;
 
 	bool apertous3 = false;
@@ -448,42 +439,32 @@ int main(int argc, char *argv[])
 			printf("Saiu do modo de configuração!\n");
 			debounce(pushbutton23);
 			break;
-		} else if(GPIORead(pushbutton23) == 0){
-			//printf("passo 1 - 23\n");		
+		} else if(GPIORead(pushbutton23) == 0){	
 			printf("Aperte S3 novamente para confirmar a configuração!\n");	
 			debounce(pushbutton23);
 			apertous3 = true;
 			escreve_padrao_comnumero(qtdPadroes);
 		} else {
 		 	if (GPIORead(pushbutton25) == 0) {
-				//printf("passo 2 - 25\n");			
 				debounce(pushbutton25);
 				apertous3 = false;
 				if (qtdPadroes < 16) {
-					//printf("passo 3 - 25 / <16\n");			
 					qtdPadroes++;
-					//escreve_padrao_comnumero(qtdPadroes);
 					printf("Quantidade de padrões: %d\n", qtdPadroes);
 				}
 			} else if (GPIORead(pushbutton24) == 0) {
-				debounce(pushbutton24);
-				//printf("passo 4 - 24\n");			
+				debounce(pushbutton24);			
 				apertous3 = false;
 				if (qtdPadroes > 2) {
 					qtdPadroes--;
-					//escreve_padrao_comnumero(qtdPadroes);
 					printf("Quantidade de padrões: %d\n", qtdPadroes);
 				}
 			}
-			//usleep(500 * 1000);
 		}
 	}
-
 	apertous3 = false;
-	//printf("Entrando no proximo while\n")
 	inicializa_array_vezes_padroes();
 	printa_vezes_padroes();
-	
 	while(1) {
 		//Set GPIO directions
 		if (-1 == GPIODirection(pushbutton25, OUT)) {
@@ -523,35 +504,6 @@ int main(int argc, char *argv[])
 			return(2);
 		}
 
-		//CHAMADA DE FUNCAO QUANDO UM BOTAO E PRESSIONADO
-		/*
-		if (GPIORead(pushbutton25) == 0)
-		{
-			printf("25\n");
-			debounce(pushbutton25);
-			proximo_padrao();
-			apertous3 = false;
-		}
-		else if (GPIORead(pushbutton24) == 0)
-		{
-			printf("24\n");
-			debounce(pushbutton24);
-			padrao_anterior();
-			apertous3 = false;
-		}
-		else if (GPIORead(pushbutton23) == 0 && apertous3) //confirmacao
-		{	
-			printf("23\n");
-			debounce(pushbutton23);
-			escrever_padrao();
-			apertous3 = false;
-		} else if(GPIORead(pushbutton23) == 0) {
-			debounce(pushbutton23);
-			apertous3 = true;
-			ler_mudancas_de_cada_padrao();
-		}
-		*/
-
 		if(GPIORead(pushbutton23) == 0 && apertous3) {	
 			printf("Confirmou padrão\n");
 			debounce(pushbutton23);
@@ -565,23 +517,16 @@ int main(int argc, char *argv[])
 			apertous3 = true;
 		} else {
 		 	if (GPIORead(pushbutton25) == 0) {
-				//printf("25\n");
 				debounce(pushbutton25);
 				proximo_padrao();
 				apertous3 = false;
 			} else if (GPIORead(pushbutton24) == 0) {
-				//printf("24\n");
 				debounce(pushbutton24);
 				padrao_anterior();
 				apertous3 = false;
 			}
-			//usleep(500 * 1000);
 		}
-
-		//Read GPIO value
-		//usleep(500 * 1000);
 	}
-	
 
 	//Disable GPIO pins
 	if (-1 == GPIOUnexport(pushbutton25)) {
@@ -593,6 +538,5 @@ int main(int argc, char *argv[])
 	if (-1 == GPIOUnexport(pushbutton23)) {
 		return(4);
 	}
-
 	return(0);
 }

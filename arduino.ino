@@ -1,4 +1,4 @@
-
+// Lucas Bergmann e Ludgero Mascarenhas
 
 int led3 = 9 ; //PB01 
 int led4 = 10; //PB02
@@ -13,7 +13,8 @@ int mudancas_de_padrao = 0;
 int valor_recebido = 0;
 
 void setup() 
-{         
+{     
+    
 	Serial.begin(9600);  
 	pinMode(led3, OUTPUT);
 	pinMode(led4, OUTPUT);     
@@ -31,12 +32,14 @@ void setup()
 
 void padrao_a() // 0
 {
+	
 	digitalWrite(led3, LOW);
 	digitalWrite(led4, LOW);
 	digitalWrite(led5, LOW);
 	digitalWrite(led6, LOW);
 	digitalWrite(led7, LOW);
 	delay(1000);
+	
 }
 
 void padraoInverso_a()
